@@ -1,6 +1,5 @@
-package utils;
+package com.haiprj.gamebase.utils;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 
 public class GameUtils {

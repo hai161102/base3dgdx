@@ -1,4 +1,4 @@
-package utils;
+package com.haiprj.gamebase.utils;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;

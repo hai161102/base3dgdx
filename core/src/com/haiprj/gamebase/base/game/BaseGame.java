@@ -1,8 +1,7 @@
-package base.game;
+package com.haiprj.gamebase.base.game;
 
-import base.screen.BaseScreen;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
+import com.haiprj.gamebase.base.screen.BaseScreen;
 
 public abstract class BaseGame extends Game {
 

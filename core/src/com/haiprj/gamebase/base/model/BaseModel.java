@@ -1,4 +1,4 @@
-package base.model;
+package com.haiprj.gamebase.base.model;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import utils.GameUtils;
-import utils.loader.G3DJLoader;
+import com.haiprj.gamebase.utils.GameUtils;
+import com.haiprj.gamebase.utils.loader.G3DJLoader;
 
 public abstract class BaseModel extends ModelInstance {
 

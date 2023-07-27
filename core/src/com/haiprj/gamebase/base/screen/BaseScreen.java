@@ -1,15 +1,16 @@
-package base.screen;
+package com.haiprj.gamebase.base.screen;
 
-import base.game.BaseGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.utils.viewport.*;
-import utils.GameUtils;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.haiprj.gamebase.base.game.BaseGame;
 
-import static utils.GameUtils.*;
-import static utils.GameUtils.CONFIG_SIZE;
+import static com.haiprj.gamebase.utils.GameUtils.VIEWPORT_HEIGHT;
+import static com.haiprj.gamebase.utils.GameUtils.VIEWPORT_WIDTH;
+
 
 public abstract class BaseScreen implements Screen {
 
