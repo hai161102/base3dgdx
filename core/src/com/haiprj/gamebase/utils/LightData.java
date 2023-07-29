@@ -8,11 +8,16 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class LightData extends DirectionalShadowLight {
 
-    private Environment environment;
-    private ModelBatch shadowBatch;
-    private Camera camera;
+    protected Environment environment;
+    protected ModelBatch shadowBatch;
+    protected Camera camera;
+    public Vector3 vector;
     public LightData(int shadowMapWidth, int shadowMapHeight, float shadowViewportWidth, float shadowViewportHeight, float shadowNear, float shadowFar) {
         super(shadowMapWidth, shadowMapHeight, shadowViewportWidth, shadowViewportHeight, shadowNear, shadowFar);
         this.set(0.8f, 0.8f, 0.8f, -10f, -10f, -10f);
@@ -33,7 +38,10 @@ public class LightData extends DirectionalShadowLight {
 
     public void update(float dt, ModelInstance... data) {
         if (this.environment != null && this.camera != null) {
-            this.begin(Vector3.Zero, camera.direction);
+            if (vector == null) {
+                this.begin(Vector3.Zero, camera.direction);
+            }
+            else this.begin(vector, camera.direction);
             shadowBatch.begin(this.getCamera());
             for (ModelInstance d : data) {
 
@@ -42,5 +50,24 @@ public class LightData extends DirectionalShadowLight {
             shadowBatch.end();
             this.end();
         }
+    }
+    public void updateLight(float dt, Object... data) {
+        final List<ModelInstance> listModel = new ArrayList<>();
+        for (Object datum : data) {
+            if (datum instanceof ModelInstance || datum instanceof List){
+                if (datum instanceof List) {
+                    //noinspection unchecked
+                    listModel.addAll((Collection<? extends ModelInstance>) datum);
+                }
+                else listModel.add((ModelInstance) datum);
+            }
+
+        }
+        ModelInstance[] d = new ModelInstance[listModel.size()];
+        for (ModelInstance modelInstance : listModel) {
+            d[listModel.indexOf(modelInstance)] = modelInstance;
+
+        }
+        this.update(dt, d);
     }
 }

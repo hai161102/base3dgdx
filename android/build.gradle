@@ -1,7 +1,6 @@
 android {
     namespace "com.haiprj.gamebase"
-    buildToolsVersion "34.0.0"
-    compileSdkVersion 34
+    compileSdkVersion 33
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -20,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.haiprj.gamebase"
         minSdkVersion 16
-        targetSdkVersion 34
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
