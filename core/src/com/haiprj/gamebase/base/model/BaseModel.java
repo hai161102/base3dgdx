@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.haiprj.gamebase.utils.GameUtils;
@@ -15,9 +16,12 @@ public abstract class BaseModel extends ModelInstance {
 
     protected BoundingBox bb;
     protected Vector3 realSize;
-    protected Vector3 position;
+    protected final Vector3 position = new Vector3(0, 0, 0) ;
+    protected final Vector3 beforePos = position;
     protected Vector3 direction;
+    protected float currentRotateAngle = 0f;
     protected float scale = 0f;
+    protected float speed = 5f;
     protected AnimationController animationController;
     public int loopCount = 1;
     public BaseModel(Model model) {
@@ -77,8 +81,9 @@ public abstract class BaseModel extends ModelInstance {
         return p;
     }
     public void setPosition(Vector3 position) {
-        this.position = position;
+        this.position.set(position);
         this.transform.setTranslation(this.position);
+        this.beforePos.set(this.position);
     }
 
     public void setPosition(float x, float y, float z) {
@@ -102,6 +107,9 @@ public abstract class BaseModel extends ModelInstance {
     }
 
     public void rotate(Vector3 rotateAxis, float degree) {
+        currentRotateAngle += degree;
+        if (currentRotateAngle <= 0 ) currentRotateAngle = 359;
+        else if (currentRotateAngle >= 360) currentRotateAngle = 0;
         this.transform.rotate(rotateAxis, degree);
     }
 
@@ -125,6 +133,20 @@ public abstract class BaseModel extends ModelInstance {
         if (this.animationController != null) {
             this.animationController.update(dt);
         }
+    }
+
+    public void goFront(float delta) {
+        float distance = speed * delta;
+        float changeX = distance * MathUtils.sinDeg(currentRotateAngle);
+        float changeZ = distance * MathUtils.cosDeg(currentRotateAngle);
+        this.setPosition(this.position.x + changeX, this.position.y, this.position.z + changeZ);
+    }
+
+    public void goBack(float delta) {
+        float distance = speed * delta;
+        float changeX = distance * MathUtils.sinDeg(currentRotateAngle);
+        float changeZ = distance * MathUtils.cosDeg(currentRotateAngle);
+        this.setPosition(this.position.x - changeX, this.position.y, this.position.z - changeZ);
     }
 
     public void dispose() {
