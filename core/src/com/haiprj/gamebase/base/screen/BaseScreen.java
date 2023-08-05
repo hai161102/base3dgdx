@@ -1,6 +1,7 @@
 package com.haiprj.gamebase.base.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -12,7 +13,7 @@ import static com.haiprj.gamebase.utils.GameUtils.VIEWPORT_HEIGHT;
 import static com.haiprj.gamebase.utils.GameUtils.VIEWPORT_WIDTH;
 
 
-public abstract class BaseScreen implements Screen {
+public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected BaseGame game;
     protected Viewport viewport;
@@ -70,5 +71,14 @@ public abstract class BaseScreen implements Screen {
 
     public BaseGame getGame() {
         return game;
+    }
+
+    public PerspectiveCamera getCamera() {
+        return camera;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
     }
 }

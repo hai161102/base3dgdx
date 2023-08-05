@@ -1,5 +1,6 @@
 package com.haiprj.gamebase.base.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -7,12 +8,19 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.haiprj.gamebase.base.screen.BaseScreen;
+import com.haiprj.gamebase.interfaces.IModel;
+import com.haiprj.gamebase.interfaces.OnClickListener;
 import com.haiprj.gamebase.utils.GameUtils;
 import com.haiprj.gamebase.utils.loader.G3DJLoader;
 
-public abstract class BaseModel extends ModelInstance {
+import java.util.HashMap;
+import java.util.Objects;
+
+public abstract class BaseModel extends ModelInstance implements IModel {
 
     protected BoundingBox bb;
     protected Vector3 realSize;
@@ -22,7 +30,18 @@ public abstract class BaseModel extends ModelInstance {
     protected float currentRotateAngle = 0f;
     protected float scale = 0f;
     protected float speed = 5f;
+
     protected AnimationController animationController;
+    protected OnClickListener clickListener;
+    protected BaseScreen screen;
+    protected final HashMap<String, Object> cacheData = new HashMap<>();
+
+
+    public void setOnClickListener(BaseScreen screen, OnClickListener clickListener) {
+        this.screen = screen;
+        this.clickListener = clickListener;
+    }
+
     public int loopCount = 1;
     public BaseModel(Model model) {
         super(model);
@@ -135,6 +154,29 @@ public abstract class BaseModel extends ModelInstance {
         }
     }
 
+    public void touchDown(int screenX, int screenY) {
+        if (this.clickListener != null && this.screen != null) {
+            Vector3 point = GameUtils.getWorldPositionOnClick(this.screen.getCamera(), this, screenX, screenY);
+            if (point != null) {
+                cacheData.remove("click_position");
+                cacheData.put("click_position", point);
+                this.clickListener.onClick(this, point);
+            }
+        }
+    }
+
+    public void touchDragged(int screenX, int screenY) {
+        if (!canDrag()) return;
+        if (this.clickListener != null && this.screen != null) {
+            Vector3 point = GameUtils.getWorldPositionOnClick(this.screen.getCamera(), this, screenX, screenY);
+            if (point != null) {
+                this.setPosition(point);
+                Vector3 v = null;
+                if (cacheData.containsKey("click_position")) v = (Vector3) cacheData.get("click_position");
+                this.clickListener.onDrag(this, v);
+            }
+        }
+    }
     public void goFront(float delta) {
         float distance = speed * delta;
         float changeX = distance * MathUtils.sinDeg(currentRotateAngle);
@@ -150,6 +192,7 @@ public abstract class BaseModel extends ModelInstance {
     }
 
     public void dispose() {
+        cacheData.clear();
         this.model.dispose();
     }
 }
